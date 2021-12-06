@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const fileUpload = require("express-fileupload");
 
@@ -12,8 +13,8 @@ const app = express();
 // cors : farklı klasördeki uygulamaları birbirine bağlar
 app.use(express.static(__dirname + "/public"));
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 const cors = require("cors");
 app.use(fileUpload());
 
@@ -34,7 +35,7 @@ mongoose.connect(process.env.BAGLANTI, {
 mongoose.set("useCreateIndex", true);
 app.use(
   session({
-    secret: "Techproeducation - WebDeveloper",
+    secret: "NauShopping - Session",
     resave: true,
     saveUninitialized: true,
     name: "kullanici_bilgileri",
