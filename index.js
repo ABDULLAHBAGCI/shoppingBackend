@@ -8,6 +8,13 @@ const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const session = require("express-session");
 const stripe = require("stripe")(process.env.STRIPE);
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('sslcert/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('sslcert/cert.crt', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
 
 const app = express();
 // cors : farklı klasördeki uygulamaları birbirine bağlar
@@ -20,7 +27,7 @@ app.use(fileUpload());
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://naushopping.com",
     methods: "GET,HEAD, PUT, PATCH, POST, DELETE",
     credentials: true,
   })
@@ -1291,4 +1298,8 @@ app.post("/admin/api/kullanici_giris", function (req, res) {
   });
 });
 
-app.listen(5000);
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(5001);
+httpsServer.listen(5000);
