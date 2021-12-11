@@ -25,9 +25,17 @@ app.use(bodyParser.json());
 const cors = require("cors");
 app.use(fileUpload());
 
+var whitelist = ['https://naushopping.com', 'https://www.naushopping.com']
+
 app.use(
   cors({
-    origin: "https://naushopping.com",
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
     methods: "GET,HEAD, PUT, PATCH, POST, DELETE",
     credentials: true,
   })
